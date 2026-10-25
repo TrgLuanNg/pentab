@@ -2,7 +2,10 @@ use winit::{
     application::ApplicationHandler,
     event::WindowEvent,
     event_loop::{self, ActiveEventLoop, ControlFlow, EventLoop},
-    window::Window,
+    window::{
+        Window,
+        WindowLevel::{AlwaysOnBottom, AlwaysOnTop},
+    },
 };
 #[derive(Default)]
 struct App {
@@ -11,11 +14,11 @@ struct App {
 
 impl ApplicationHandler for App {
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {
-        self.window = Some(
-            event_loop
-                .create_window(Window::default_attributes())
-                .unwrap(),
-        )
+        let attributes = Window::default_attributes()
+            .with_transparent(true)
+            .with_decorations(false)
+            .with_window_level(AlwaysOnTop);
+        self.window = Some(event_loop.create_window(attributes).unwrap())
     }
     fn window_event(
         &mut self,
